@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/jamestomasino/flashleit/issues"
   },
-  "homepage": "https://github.com/jamestomasino/flashleit#readme"
+  "homepage": "https://github.com/jamestomasino/flashleit#readme",
+  "dependencies": {
+    "commander": "^2.16.0"
+  }
 }
