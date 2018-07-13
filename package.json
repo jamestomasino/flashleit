@@ -1,0 +1,25 @@
+{
+  "name": "flashleit",
+  "version": "1.0.0",
+  "description": "Leitner spaced repetition system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamestomasino/flashleit.git"
+  },
+  "keywords": [
+    "leitner",
+    "srs",
+    "spaced",
+    "repetition"
+  ],
+  "author": "James Tomasino",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jamestomasino/flashleit/issues"
+  },
+  "homepage": "https://github.com/jamestomasino/flashleit#readme"
+}
