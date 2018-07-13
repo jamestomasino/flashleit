@@ -1,19 +1,16 @@
 # flashleit ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
 
-**flashleit** is a posix shell implementation of a Leitner spaced repetition system.
+**flashleit** is a node implementation of a Leitner spaced repetition system.
 
 ## Installation
 
 ### Install
 
-`sudo make install`
+`npm install -g flashleit`
 
-_Note: On systems without admin access the binary can be run directly from the
-git repo, but will lack `man` support._
+or
 
-### Uninstall
-
-`sudo make uninstall`
+`yarn global add flashleit`
 
 ## Using the Leitner System
 
@@ -28,9 +25,9 @@ Each card is displayed on a schedule based on its current proficiency level.
 
 **flashleit** allows you to customize the number of proficiency levels you would like to use.
 
-**Note**: Once a card reaches the maximum proficiency level it will not be shown again. This card  has been successfully memorized.
+**Note**: _Once a card reaches the maximum proficiency level it will not be shown again. This card  has been successfully memorized._
 
-**Note**: Cards at proficiency level 1 will be shown repeatedly until successfully advanced to level 2 or the program is quit.
+**Note**: _Cards at proficiency level 1 will be shown repeatedly until successfully advanced to level 2 or the program is quit._
 
 ### Shuffle
 
