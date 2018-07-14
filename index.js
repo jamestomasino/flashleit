@@ -5,45 +5,16 @@ const chalk       = require('chalk')
 const clear       = require('clear')
 const figlet      = require('figlet')
 const program     = require('commander')
-const Configstore = require('configstore')
 
-const pkg         = require('./package.json')
 const cards       = require('./lib/card')
 const utils       = require('./lib/utils')
 const settings    = require('./lib/settings')
 const inquirer    = require('./lib/inquirer')
 
 const l           = console.log
-var diskConf    = new Configstore(pkg.name)
-
-/* [x] Setup Program
- * [x] Check settings
- *   - [x] maxlevels
- *   - [x] session number
- * [x] Load Cards Array
- * [x] Calculate proficiency levels to be displayed
- *   - [x] Filter
- *   - [ ] Randomize each array
- * [x] Main menu loop
- *   - [x] Exit
- * [ ] Start main display loop
- *   - [ ] Display Card
- *   - [ ] Flip on keypress
- *   - [ ] Success, Fail, Delete, Quit
- *   - [ ] Update Card data in conf
- *   - [ ] Check for remaining cards, loop or quit
- * [x] Add Cards
- *   - [x] Prompt for cards
- *   - [x] Collect data for front & back
- *   - [x] Push data to config
- *
- */
-
-// Initialize Settings
-settings.init(diskConf)
 
 // Initialize Card Stock
-cards.init(diskConf, settings)
+cards.init(settings)
 
 // Visual Styling
 var error = settings.getColorProfile('error')
