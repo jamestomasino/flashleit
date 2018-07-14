@@ -51,6 +51,7 @@ const mainMenu = async () => {
       break
   }
 
+  // Loop back to main menu
   mainMenu()
 }
 
