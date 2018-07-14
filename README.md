@@ -32,6 +32,14 @@ would like to use.
 **Note**: _Once a card reaches the maximum proficiency level it will not be
 shown again. This card has been successfully memorized._
 
+## Settings
+
+Many styles and settings are configurable, such as:
+
+- Maximum proficiency levels _(default 7)_
+- Delay before revealing back of card _(default 2 seconds)_
+- Text colors
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to
