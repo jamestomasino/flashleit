@@ -9,9 +9,9 @@ const Configstore = require('configstore')
 
 const pkg         = require('./package.json')
 const cards       = require('./lib/card')
-const utils       = require('./lib/utils');
-const settings    = require('./lib/settings');
-const inquirer    = require('./lib/inquirer');
+const utils       = require('./lib/utils')
+const settings    = require('./lib/settings')
+const inquirer    = require('./lib/inquirer')
 
 const l           = console.log
 var diskConf    = new Configstore(pkg.name)
@@ -49,6 +49,8 @@ cards.init(diskConf, settings)
 var error = settings.getColorProfile('error')
 var info = settings.getColorProfile('info')
 var title = settings.getColorProfile('title')
+var front = settings.getColorProfile('front')
+var back = settings.getColorProfile('back')
 
 /* Input Cycles
 */
@@ -59,7 +61,7 @@ const mainMenu = async () => {
   utils.br()
 
   // Main menu prompt
-  const menuResponse = await inquirer.mainMenu();
+  const menuResponse = await inquirer.mainMenu()
 
   // Handle menu choices
   switch (menuResponse.mainmenu) {
@@ -67,56 +69,81 @@ const mainMenu = async () => {
       if (await confirm()) {
         await utils.die()
       }
-      break;
+      break
     case 'add a new card':
       await newCard()
-      break;
+      break
     case 'start a practice session':
-      cards.getSessionCards()
-      await confirm()
-      break;
+      await showCards()
+      break
     default:
       mainMenu()
-      break;
+      break
   }
 
-  mainMenu();
+  mainMenu()
 }
 
 const newCard = async () => {
   clear()
-  const newCardResponse = await inquirer.newCard();
+  const newCardResponse = await inquirer.newCard()
   cards.addCard(newCardResponse.cardFront, newCardResponse.cardBack)
   l(info('Card successfully added'))
   utils.br(2)
   await utils.pause()
-  return;
+  return
 }
 
 const confirm = async () => {
-  const confirmResponse = await inquirer.confirm();
+  const confirmResponse = await inquirer.confirm()
   switch (confirmResponse.confirm) {
     case 'yes':
       return true
-      break;
+      break
     case 'no':
       return false
-      break;
+      break
   }
-  return true;
+  return true
 }
 
 const solveCard = async () => {
-  const solveCardResponse = await inquirer.solveCard();
+  return
+}
+
+const showCards = async () => {
+  var today = cards.generateSessionCards()
+  let i = today.length
+  if (i) {
+    while (i--) {
+      if (await showCard(today[i])) return
+    }
+  } else {
+    l(info('All cards reviewed for today'))
+    await utils.pause(1)
+    return
+  }
+}
+
+const showCard = async (index) => {
+  clear()
+  let c = cards.getCard(index)
+  l(front(c.front))
+  await utils.pause(2)
+  l(back(c.back))
+  const solveCardResponse = await inquirer.solveCard()
   switch (solveCardResponse.cardSuccess) {
     case 'yes':
-      break;
+      cards.updateCard(index, true)
+      break
     case 'no':
-      break;
+      cards.updateCard(index, false)
+      break
     case 'quit':
-      break;
+      return true // will quit card cycle
+      break
   }
-  return;
+  return false
 }
 
 /* Start main program loop
