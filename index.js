@@ -93,29 +93,8 @@ if (settings.titleBold) {
 
 program
   .version('1.0.0')
-  .option('-a, --add','Add a card')
-  .option('-c, --complete','Show completed cards')
-  .option('-m, --maxlevels <n>', 'Set maximum proficiency levels', parseInt)
   .option('-d, --debug')
   .parse(process.argv) // end with parse to parse through the input
-
-// Check for arguments
-if (program.complete) {
-  l(info('Show completed cards'))
-  await utils.die()
-}
-
-if (program.add) {
-  l(info('Add a card'))
-  await utils.die()
-}
-
-if (program.maxlevels > 1) {
-  l(info('Set maximum proficiency levels to %s'), program.maxlevels)
-  settings.maxlevels = program.maxlevels
-  diskConf.set('settings.maxlevels', program.maxlevels)
-  await utils.die()
-}
 
 if (program.debug) {
   l(info( 'settings: %j'), settings)
