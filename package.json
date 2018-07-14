@@ -1,6 +1,6 @@
 {
   "name": "flashleit",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Leitner spaced repetition system",
   "main": "index.js",
   "scripts": {

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
+const pkg         = require('../package.json')
 const chalk       = require('chalk')
 const clear       = require('clear')
 const figlet      = require('figlet')
@@ -121,6 +122,6 @@ const showCard = async (index) => {
 /* Start main program loop
 */
 program
-  .version('1.0.0')
+  .version(pkg.version)
   .parse(process.argv)
 mainMenu()
