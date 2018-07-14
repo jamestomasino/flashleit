@@ -21,8 +21,8 @@ var diskConf    = new Configstore(pkg.name)
  *   - [x] maxlevels
  *   - [x] session number
  * [x] Load Cards Array
- * [ ] Calculate proficiency levels to be displayed
- *   - [ ] Filter
+ * [x] Calculate proficiency levels to be displayed
+ *   - [x] Filter
  *   - [ ] Randomize each array
  * [x] Main menu loop
  *   - [x] Exit
@@ -70,6 +70,10 @@ const mainMenu = async () => {
       break;
     case 'add a new card':
       await newCard()
+      break;
+    case 'start a practice session':
+      cards.getSessionCards()
+      await confirm()
       break;
     default:
       mainMenu()
