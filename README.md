@@ -4,11 +4,7 @@
 
 ## Installation
 
-### Install
-
-`npm i -g flashleit`
-
-or
+### Install or Upgrade
 
 `yarn global add flashleit`
 
