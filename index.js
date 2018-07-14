@@ -9,9 +9,10 @@ const program     = require('commander')
 const Configstore = require('configstore')
 var CLI         = require('clui')
 
+const l           = console.log
 var diskConf    = new Configstore(pkg.name)
 var Spinner     = CLI.Spinner
-const l           = console.log
+var Progress    = CLI.Progress;
 
 /* [x] Setup Program
  * [x] Check settings
@@ -73,20 +74,22 @@ const title   = chalk.black.bgYellow.bold
  */
 function die () {
   process.stdout.write('\n');
+  var thisProgressBar = new Progress(45);
+
   var countdown = new Spinner(
-    warn('Exiting in 5 seconds...  '),
+    warn(thisProgressBar.update(0)),
     ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']
   )
   countdown.start();
-  var number = 5
+  var number = 1
   setInterval(() => {
-    number--
-    countdown.message(warn( 'Exiting in ' + number + ' seconds...  '));
-    if (number === 0) {
+    countdown.message(warn(thisProgressBar.update(number, 100)))
+    number+=2
+    if (number >= 100) {
       clear()
       process.exit(0)
     }
-  }, 1000)
+  }, 50)
 }
 
 program
