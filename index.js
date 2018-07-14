@@ -73,11 +73,12 @@ function br () {process.stdout.write('\n')}
  *  - wait for time, default
  *  - return
  */
-function pause () {
+function pause (time=2) {
+  let increment = (100 / 20) / time
+  l(increment)
   return new Promise((resolve) => {
     br()
     var thisProgressBar = new Progress(45)
-
     var countdown = new Spinner(
       warn(thisProgressBar.update(0)),
       ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']
@@ -85,8 +86,8 @@ function pause () {
     countdown.start()
     var number = 1
     setInterval(() => {
+      number+=increment
       countdown.message(warn(thisProgressBar.update(number, 100)))
-      number+=2
       if (number >= 100) {
         resolve()
       }
@@ -101,7 +102,7 @@ function pause () {
  *  - exit
  */
 async function die () {
-  await pause()
+  await pause(2)
   br()
   process.exit(0)
 }
