@@ -18,15 +18,12 @@ var diskConf    = new Configstore(pkg.name)
  * [x] Check settings
  *   - [x] maxlevels
  *   - [x] session number
- * [ ] Check for switches
- *   - [ ] Check for debug
- *   - [ ] Check for card addition
- *   - [ ] Check for display complete
- *   - [x] Check for set maxlevels
  * [ ] Load Cards Array
  * [ ] Calculate proficiency levels to be displayed
  *   - [ ] Filter
  *   - [ ] Randomize each array
+ * [x] Main menu loop
+ *   - [x] Exit
  * [ ] Start main display loop
  *   - [ ] Display Card
  *   - [ ] Flip on keypress
@@ -111,10 +108,12 @@ const mainMenu = async () => {
 
   // Handle menu choices
   switch (menuResponse.mainmenu) {
-    case 'Exit':
-      await utils.die()
+    case 'exit':
+      if (await confirm()) {
+        await utils.die()
+      }
       break;
-    case 'Add a new card':
+    case 'add a new card':
       await newCard()
       break;
     default:
@@ -127,8 +126,6 @@ const mainMenu = async () => {
 
 const newCard = async () => {
   clear()
-
-  // Main menu prompt
   const newCardResponse = await inquirer.newCard();
   l(info(JSON.stringify(newCardResponse)))
   utils.br(2)
@@ -136,6 +133,30 @@ const newCard = async () => {
   return;
 }
 
+const confirm = async () => {
+  const confirmResponse = await inquirer.confirm();
+  switch (confirmResponse.confirm) {
+    case 'yes':
+      return true
+      break;
+    case 'no':
+      return false
+      break;
+  }
+  return true;
+}
 
+const solveCard = async () => {
+  const solveCardResponse = await inquirer.solveCard();
+  switch (solveCardResponse.cardSuccess) {
+    case 'yes':
+      break;
+    case 'no':
+      break;
+    case 'quit':
+      break;
+  }
+  return;
+}
 
 mainMenu()
