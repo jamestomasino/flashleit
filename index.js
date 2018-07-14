@@ -9,6 +9,7 @@ const program     = require('commander')
 const Configstore = require('configstore')
 const utils       = require('./lib/utils');
 const settings    = require('./lib/settings');
+const inquirer    = require('./lib/inquirer');
 
 const l           = console.log
 var diskConf    = new Configstore(pkg.name)
@@ -90,12 +91,6 @@ if (settings.titleBold) {
   title = title.bold
 }
 
-/* Shutdown function
- *  - display pause
- *  - save all data
- *  - clear screen
- *  - exit
- */
 program
   .version('1.0.0')
   .option('-a, --add','Add a card')
@@ -103,11 +98,6 @@ program
   .option('-m, --maxlevels <n>', 'Set maximum proficiency levels', parseInt)
   .option('-d, --debug')
   .parse(process.argv) // end with parse to parse through the input
-
-// Initialize Screen, display header
-//clear()
-l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
-utils.br()
 
 // Check for arguments
 if (program.complete) {
@@ -131,4 +121,25 @@ if (program.debug) {
   l(info( 'settings: %j'), settings)
 }
 
-utils.die()
+const run = async () => {
+  // Initialize Screen, display header
+  clear()
+  l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
+  utils.br()
+
+  // Main menu prompt
+  const menuResponse = await inquirer.mainMenu();
+
+  // Handle menu choices
+  switch (menuResponse.mainmenu) {
+    case 'Exit':
+      utils.br()
+      utils.die()
+      break;
+    default:
+      run()
+      break;
+  }
+}
+
+run()
