@@ -113,6 +113,7 @@ const solveCard = async () => {
 
 const showCards = async () => {
   var today = cards.generateSessionCards()
+  today = utils.shuffle(today)
   let i = today.length
   if (i) {
     while (i--) {
