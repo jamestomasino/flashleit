@@ -14,8 +14,9 @@ const inquirer    = require('./lib/inquirer')
 
 const l           = console.log
 
-// Initialize Card Stock
+// pass access to settings to our cards and questions
 cards.init(settings)
+inquirer.init(settings)
 
 // Visual Styling
 var error = settings.getColorProfile('error')
@@ -24,12 +25,15 @@ var title = settings.getColorProfile('title')
 var front = settings.getColorProfile('front')
 var back  = settings.getColorProfile('back')
 
+function showTitle () {
+  l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
+  utils.br()
+}
+
 const mainMenu = async () => {
   // Initialize Screen, display header
   clear()
-  l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
-  utils.br()
-
+  showTitle()
   // Main menu prompt
   const menuResponse = await inquirer.mainMenu()
 
@@ -46,6 +50,9 @@ const mainMenu = async () => {
     case 'start a practice session':
       await showCards()
       break
+    case 'change settings':
+      await showOptions()
+      break;
     default:
       mainMenu()
       break
@@ -76,6 +83,16 @@ const confirm = async () => {
       break
   }
   return true
+}
+
+const showOptions = async () => {
+  clear()
+  showTitle()
+  await inquirer.optionsMenu()
+  l(info('Saving settings...'))
+  utils.br()
+  await utils.pause(1)
+  return
 }
 
 const showCards = async () => {
