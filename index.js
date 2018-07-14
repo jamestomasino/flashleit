@@ -121,7 +121,7 @@ if (program.debug) {
   l(info( 'settings: %j'), settings)
 }
 
-const run = async () => {
+const mainMenu = async () => {
   // Initialize Screen, display header
   clear()
   l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
@@ -133,13 +133,30 @@ const run = async () => {
   // Handle menu choices
   switch (menuResponse.mainmenu) {
     case 'Exit':
-      utils.br()
-      utils.die()
+      await utils.die()
+      break;
+    case 'Add a new card':
+      await newCard()
       break;
     default:
-      run()
+      mainMenu()
       break;
   }
+
+  mainMenu();
 }
 
-run()
+const newCard = async () => {
+  clear()
+
+  // Main menu prompt
+  const newCardResponse = await inquirer.newCard();
+  l(info(JSON.stringify(newCardResponse)))
+  utils.br(2)
+  await utils.pause(5)
+  return;
+}
+
+
+
+mainMenu()
