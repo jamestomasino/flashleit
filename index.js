@@ -7,12 +7,10 @@ const clear       = require('clear')
 const figlet      = require('figlet')
 const program     = require('commander')
 const Configstore = require('configstore')
-var CLI         = require('clui')
+const utils       = require('./lib/utils');
 
 const l           = console.log
 var diskConf    = new Configstore(pkg.name)
-var Spinner     = CLI.Spinner
-var Progress    = CLI.Progress
 
 /* [x] Setup Program
  * [x] Check settings
@@ -62,38 +60,8 @@ if (diskConf.has('settings')) {
 /* Visual Styling
 */
 const error   = chalk.bold.red
-const warn    = chalk.magentaBright
 const info    = chalk.blue
 const title   = chalk.black.bgYellow.bold
-function br () {process.stdout.write('\n')}
-
-/* Pause function
- *  - display progressbar
- *  - display spinner
- *  - wait for time, default
- *  - return
- */
-function pause (time=2) {
-  let increment = (100 / 20) / time
-  l(increment)
-  return new Promise((resolve) => {
-    br()
-    var thisProgressBar = new Progress(45)
-    var countdown = new Spinner(
-      warn(thisProgressBar.update(0)),
-      ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']
-    )
-    countdown.start()
-    var number = 1
-    setInterval(() => {
-      number+=increment
-      countdown.message(warn(thisProgressBar.update(number, 100)))
-      if (number >= 100) {
-        resolve()
-      }
-    }, 50)
-  })
-}
 
 /* Shutdown function
  *  - display pause
@@ -101,12 +69,6 @@ function pause (time=2) {
  *  - clear screen
  *  - exit
  */
-async function die () {
-  await pause(2)
-  br()
-  process.exit(0)
-}
-
 program
   .version('1.0.0')
   .option('-a, --add','Add a card')
@@ -118,28 +80,28 @@ program
 // Initialize Screen, display header
 clear()
 l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
-br()
+utils.br()
 
 // Check for arguments
 if (program.complete) {
   l(info('Show completed cards'))
-  die()
+  utils.die()
 }
 
 if (program.add) {
   l(info('Add a card'))
-  die()
+  utils.die()
 }
 
 if (program.maxlevels > 1) {
   l(info('Set maximum proficiency levels to %s'), program.maxlevels)
   settings.maxlevels = program.maxlevels
   diskConf.set('settings.maxlevels', program.maxlevels)
-  die()
+  utils.die()
 }
 
 if (program.debug) {
   l(info( 'settings: %j'), settings)
 }
 
-die()
+utils.die()
