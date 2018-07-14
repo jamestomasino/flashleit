@@ -1,31 +1,28 @@
 #!/usr/bin/env node
 'use strict'
 
-const pkg         = require('./package.json');
-const chalk       = require('chalk');
-const clear       = require('clear');
-const figlet      = require('figlet');
+const pkg         = require('./package.json')
+const chalk       = require('chalk')
+const clear       = require('clear')
+const figlet      = require('figlet')
 const program     = require('commander')
-const Configstore = require('configstore');
+const Configstore = require('configstore')
 var CLI         = require('clui')
 
-const diskConf    = new Configstore(pkg.name);
-var Spinner     = CLI.Spinner;
-
-// Default Settings
-let settings = {
-  maxlevels: 7,
-}
-
-// Get Settings from system config
-if (diskConf.has('settings')) {
-  settings = diskConf.get('settings')
-}
+var diskConf    = new Configstore(pkg.name)
+var Spinner     = CLI.Spinner
+const l           = console.log
 
 /* [x] Setup Program
- * [x] Check options
+ * [x] Check settings
+ *   - [x] maxlevels
+ *   - [x] session number
+ * [ ] Check for switches
+ *   - [ ] Check for debug
+ *   - [ ] Check for card addition
+ *   - [ ] Check for display complete
+ *   - [x] Check for set maxlevels
  * [ ] Load Cards Array
- * [ ] Look up current session
  * [ ] Calculate proficiency levels to be displayed
  *   - [ ] Filter
  *   - [ ] Randomize each array
@@ -37,20 +34,54 @@ if (diskConf.has('settings')) {
  *   - [ ] Check for remaining cards, loop or quit
  */
 
+/* Settings
+ *  - load from disk
+ *  - update all local settings with disk settings
+ *  - add any new local settings to disk (for updates)
+ *  - if no disk settings, initialize
+ */
+let settings = {
+  maxlevels: 7,
+  session: 1
+}
+if (diskConf.has('settings')) {
+  let s, diskSettings = diskConf.get('settings')
+  for (s in diskSettings) {
+    settings[s] = diskSettings[s]
+  }
+  for (s in settings) {
+    if (! diskSettings.hasOwnProperty(s)) {
+      diskConf.set('settings.' + s, settings[s])
+    }
+  }
+} else {
+  diskConf.set('settings', settings)
+}
+
+/* Color styles
+*/
+const error   = chalk.bold.red
+const warn    = chalk.magentaBright
+const info    = chalk.blue
+const title   = chalk.black.bgYellow.bold
+
+/* Shutdown function
+ *  - display countdown spinner for shutdown
+ *  - save all data
+ *  - clear screen
+ *  - exit
+ */
 function die () {
-  // Add some space and start the exit countdown
   process.stdout.write('\n');
   var countdown = new Spinner(
-    chalk.red(
-      'Exiting in 5 seconds...  '
-    ),
+    warn('Exiting in 5 seconds...  '),
     ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']
   )
   countdown.start();
   var number = 5
   setInterval(() => {
     number--
-    countdown.message( chalk.red( 'Exiting in ' + number + ' seconds...  '));
+    countdown.message(warn( 'Exiting in ' + number + ' seconds...  '));
     if (number === 0) {
       clear()
       process.exit(0)
@@ -69,50 +100,28 @@ program
 clear();
 
 // Startup Screen
-console.log(
-  chalk.yellow(
-    figlet.textSync('flashleit', { horizontalLayout: 'full' })
-  )
-);
+l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })));
 
 // Check for arguments
 if (program.complete) {
-  console.log(
-    chalk.green(
-      'Show completed cards'
-    )
-  )
+  l(info('Show completed cards'))
   die();
 }
 
 if (program.add) {
-  console.log(
-    chalk.green(
-      'Add a card'
-    )
-  )
+  l(info('Add a card'))
   die();
 }
 
 if (program.maxlevels > 1) {
-  console.log(
-    chalk.green(
-      'Set maximum proficiency levels to %s'
-    ),
-    program.maxlevels
-  )
+  l(info('Set maximum proficiency levels to %s'), program.maxlevels)
   settings.maxlevels = program.maxlevels
   diskConf.set('settings.maxlevels', program.maxlevels)
   die();
 }
 
 if (program.debug) {
-  console.log(
-    chalk.blue(
-      'settings: %j'
-    ),
-    settings
-  )
+  l(info( 'settings: %j'), settings)
 }
 
 die();
