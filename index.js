@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
-const pkg         = require('./package.json')
 const chalk       = require('chalk')
 const clear       = require('clear')
 const figlet      = require('figlet')
 const program     = require('commander')
 const Configstore = require('configstore')
+
+const pkg         = require('./package.json')
+const cards       = require('./lib/card')
 const utils       = require('./lib/utils');
 const settings    = require('./lib/settings');
 const inquirer    = require('./lib/inquirer');
@@ -30,73 +32,26 @@ var diskConf    = new Configstore(pkg.name)
  *   - [ ] Success, Fail, Delete, Quit
  *   - [ ] Update Card data in conf
  *   - [ ] Check for remaining cards, loop or quit
+ * [x] Add Cards
+ *   - [x] Prompt for cards
+ *   - [x] Collect data for front & back
+ *   - [x] Push data to config
+ *
  */
 
+// Initialize Settings
+settings.init(diskConf)
 
-/* Settings
- *  - load from disk
- *  - update all local settings with disk settings
- *  - add any new local settings to disk (for updates)
- *  - if no disk settings, initialize
- */
-if (diskConf.has('settings')) {
-  let s, diskSettings = diskConf.get('settings')
-  for (s in diskSettings) {
-    settings[s] = diskSettings[s]
-  }
-  for (s in settings) {
-    if (! diskSettings.hasOwnProperty(s)) {
-      diskConf.set('settings.' + s, settings[s])
-    }
-  }
-} else {
-  diskConf.set('settings', settings)
-}
+// Initialize Card Stock
+cards.init(diskConf, settings)
 
-/* Visual Styling
+// Visual Styling
+var error = settings.getColorProfile('error')
+var info = settings.getColorProfile('info')
+var title = settings.getColorProfile('title')
+
+/* Input Cycles
 */
-var error = chalk.red // fallback
-if (settings.errorColor) {
-  error = chalk.hex(settings.errorColor)
-}
-if (settings.errorBGColor) {
-  error = error.bgHex(settings.errorBGColor)
-}
-if (settings.errorBold) {
-  error = error.bold
-}
-
-var info = chalk.red // fallback
-if (settings.infoColor) {
-  info = chalk.hex(settings.infoColor)
-}
-if (settings.infoBGColor) {
-  info = info.bgHex(settings.infoBGColor)
-}
-if (settings.infoBold) {
-  info = info.bold
-}
-
-var title = chalk.red // fallback
-if (settings.titleColor) {
-  title = chalk.hex(settings.titleColor)
-}
-if (settings.titleBGColor) {
-  title = title.bgHex(settings.titleBGColor)
-}
-if (settings.titleBold) {
-  title = title.bold
-}
-
-program
-  .version('1.0.0')
-  .option('-d, --debug')
-  .parse(process.argv) // end with parse to parse through the input
-
-if (program.debug) {
-  l(info( 'settings: %j'), settings)
-}
-
 const mainMenu = async () => {
   // Initialize Screen, display header
   clear()
@@ -127,9 +82,10 @@ const mainMenu = async () => {
 const newCard = async () => {
   clear()
   const newCardResponse = await inquirer.newCard();
-  l(info(JSON.stringify(newCardResponse)))
+  cards.addCard(newCardResponse.cardFront, newCardResponse.cardBack)
+  l(info('Card successfully added'))
   utils.br(2)
-  await utils.pause(5)
+  await utils.pause()
   return;
 }
 
@@ -159,4 +115,9 @@ const solveCard = async () => {
   return;
 }
 
+/* Start main program loop
+*/
+program
+  .version('1.0.0')
+  .parse(process.argv)
 mainMenu()

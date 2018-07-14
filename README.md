@@ -37,18 +37,6 @@ Each category is shuffled before review.
 
 The highest proficiency level scheduled for each day's session will be displayed first. Once that is completed the lower proficiency levels will follow until all cards have been reviewed.
 
-## Adding Cards
-
-You may add a card to **flashleit** by running the program with the switch `-a`. You will be prompted for the card front and back values and a confirmation before the card is inserted into proficiency level 1.
-
-## Deleting Cards
-
-You may choose to delete a card during review. If you do so you will be asked to confirm deletion before it takes effect.
-
-## Reviewing Memorized Cards
-
-You can see a list of all cards which you have fully memorized by running the program with the switch `-c`.
-
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to
