@@ -20,7 +20,7 @@ var diskConf    = new Configstore(pkg.name)
  * [x] Check settings
  *   - [x] maxlevels
  *   - [x] session number
- * [ ] Load Cards Array
+ * [x] Load Cards Array
  * [ ] Calculate proficiency levels to be displayed
  *   - [ ] Filter
  *   - [ ] Randomize each array
