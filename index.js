@@ -8,6 +8,7 @@ const figlet      = require('figlet')
 const program     = require('commander')
 const Configstore = require('configstore')
 const utils       = require('./lib/utils');
+const settings    = require('./lib/settings');
 
 const l           = console.log
 var diskConf    = new Configstore(pkg.name)
@@ -33,20 +34,12 @@ var diskConf    = new Configstore(pkg.name)
  *   - [ ] Check for remaining cards, loop or quit
  */
 
-/* Settings
- *  - load from disk
- *  - update all local settings with disk settings
- *  - add any new local settings to disk (for updates)
- *  - if no disk settings, initialize
- */
-let settings = {
-  maxlevels: 7,
-  session: 1
-}
 if (diskConf.has('settings')) {
   let s, diskSettings = diskConf.get('settings')
   for (s in diskSettings) {
     settings[s] = diskSettings[s]
+    l(s, settings[s])
+    utils.die()
   }
   for (s in settings) {
     if (! diskSettings.hasOwnProperty(s)) {
@@ -59,9 +52,9 @@ if (diskConf.has('settings')) {
 
 /* Visual Styling
 */
-const error   = chalk.bold.red
-const info    = chalk.blue
-const title   = chalk.black.bgYellow.bold
+const error   = chalk.hex(settings.errorColor)
+const info    = chalk.hex(settings.infoColor)
+const title   = chalk.black.bgHex(settings.titleColor).bold
 
 /* Shutdown function
  *  - display pause
