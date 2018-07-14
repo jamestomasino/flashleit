@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const pkg         = require('../package.json')
+const pkg         = require('./package.json')
 const chalk       = require('chalk')
 const clear       = require('clear')
 const figlet      = require('figlet')
