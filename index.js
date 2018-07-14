@@ -19,13 +19,11 @@ cards.init(settings)
 
 // Visual Styling
 var error = settings.getColorProfile('error')
-var info = settings.getColorProfile('info')
+var info  = settings.getColorProfile('info')
 var title = settings.getColorProfile('title')
 var front = settings.getColorProfile('front')
-var back = settings.getColorProfile('back')
+var back  = settings.getColorProfile('back')
 
-/* Input Cycles
-*/
 const mainMenu = async () => {
   // Initialize Screen, display header
   clear()
@@ -79,10 +77,6 @@ const confirm = async () => {
   return true
 }
 
-const solveCard = async () => {
-  return
-}
-
 const showCards = async () => {
   var today = cards.generateSessionCards()
   today = utils.shuffle(today)
@@ -119,8 +113,6 @@ const showCard = async (index) => {
   return false
 }
 
-/* Start main program loop
-*/
 program
   .version(pkg.version)
   .parse(process.argv)
