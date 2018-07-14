@@ -34,12 +34,17 @@ var diskConf    = new Configstore(pkg.name)
  *   - [ ] Check for remaining cards, loop or quit
  */
 
+
+/* Settings
+ *  - load from disk
+ *  - update all local settings with disk settings
+ *  - add any new local settings to disk (for updates)
+ *  - if no disk settings, initialize
+ */
 if (diskConf.has('settings')) {
   let s, diskSettings = diskConf.get('settings')
   for (s in diskSettings) {
     settings[s] = diskSettings[s]
-    l(s, settings[s])
-    utils.die()
   }
   for (s in settings) {
     if (! diskSettings.hasOwnProperty(s)) {
@@ -52,9 +57,38 @@ if (diskConf.has('settings')) {
 
 /* Visual Styling
 */
-const error   = chalk.hex(settings.errorColor)
-const info    = chalk.hex(settings.infoColor)
-const title   = chalk.black.bgHex(settings.titleColor).bold
+var error = chalk.red // fallback
+if (settings.errorColor) {
+  error = chalk.hex(settings.errorColor)
+}
+if (settings.errorBGColor) {
+  error = error.bgHex(settings.errorBGColor)
+}
+if (settings.errorBold) {
+  error = error.bold
+}
+
+var info = chalk.red // fallback
+if (settings.infoColor) {
+  info = chalk.hex(settings.infoColor)
+}
+if (settings.infoBGColor) {
+  info = info.bgHex(settings.infoBGColor)
+}
+if (settings.infoBold) {
+  info = info.bold
+}
+
+var title = chalk.red // fallback
+if (settings.titleColor) {
+  title = chalk.hex(settings.titleColor)
+}
+if (settings.titleBGColor) {
+  title = title.bgHex(settings.titleBGColor)
+}
+if (settings.titleBold) {
+  title = title.bold
+}
 
 /* Shutdown function
  *  - display pause
@@ -71,7 +105,7 @@ program
   .parse(process.argv) // end with parse to parse through the input
 
 // Initialize Screen, display header
-clear()
+//clear()
 l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
 utils.br()
 
