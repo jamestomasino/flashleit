@@ -130,7 +130,7 @@ const showCard = async (index) => {
   clear()
   let c = cards.getCard(index)
   l(front(c.front))
-  await utils.pause(2)
+  await utils.pause(settings.get('revealDelay'))
   l(back(c.back))
   const solveCardResponse = await inquirer.solveCard()
   switch (solveCardResponse.cardSuccess) {
