@@ -102,19 +102,19 @@ program
 // Check for arguments
 if (program.complete) {
   l(info('Show completed cards'))
-  utils.die()
+  await utils.die()
 }
 
 if (program.add) {
   l(info('Add a card'))
-  utils.die()
+  await utils.die()
 }
 
 if (program.maxlevels > 1) {
   l(info('Set maximum proficiency levels to %s'), program.maxlevels)
   settings.maxlevels = program.maxlevels
   diskConf.set('settings.maxlevels', program.maxlevels)
-  utils.die()
+  await utils.die()
 }
 
 if (program.debug) {
