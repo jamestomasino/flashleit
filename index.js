@@ -98,7 +98,7 @@ const showOptions = async () => {
 const showCards = async () => {
   let sets = cards.getSets()
   sets[0].checked = true
-  let sessionSets = await inquirer.sessionSets(sets)
+  let sessionSets = await inquirer.chooseSessionSets(sets)
   let today = cards.generateSessionCards(sessionSets.sessionSets)
   today = utils.shuffle(today)
   let i = today.length
