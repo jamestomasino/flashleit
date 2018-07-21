@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-'use strict'
 
 const pkg         = require('./package.json')
 const chalk       = require('chalk')
 const clear       = require('clear')
 const figlet      = require('figlet')
 const program     = require('commander')
-
 const cards       = require('./lib/card')
 const utils       = require('./lib/utils')
 const settings    = require('./lib/settings')
@@ -16,7 +14,7 @@ const inquirer    = require('./lib/inquirer')
 cards.init(settings)
 inquirer.init(settings)
 
-// Visual Styling
+// map functions for visual styling of output types
 var error = settings.getMessageFunc('error')
 var info  = settings.getMessageFunc('info')
 var title = settings.getMessageFunc('title')
@@ -28,14 +26,11 @@ function showTitle () {
   utils.br()
 }
 
+// prompt for main menu
 const mainMenu = async () => {
-  // Initialize Screen, display header
   clear()
   showTitle()
-  // Main menu prompt
   const menuResponse = await inquirer.mainMenu()
-
-  // Handle menu choices
   switch (menuResponse.mainmenu) {
     case 'exit':
       if (await confirm()) {
@@ -55,11 +50,11 @@ const mainMenu = async () => {
       mainMenu()
       break
   }
-
-  // Loop back to main menu
+  // Loop back to main menu when other actions complete
   mainMenu()
 }
 
+// prompt for new card creation
 const newCard = async () => {
   clear()
   const newCardResponse = await inquirer.newCard(cards.getSets())
@@ -70,6 +65,7 @@ const newCard = async () => {
   return
 }
 
+// prompt for confirmation
 const confirm = async () => {
   const confirmResponse = await inquirer.confirm()
   switch (confirmResponse.confirm) {
@@ -83,6 +79,7 @@ const confirm = async () => {
   return true
 }
 
+// prompt for options menu to change settings
 const showOptions = async () => {
   clear()
   showTitle()
@@ -93,6 +90,7 @@ const showOptions = async () => {
   return
 }
 
+// prompt to show todays cards by set
 const showCards = async () => {
   let sets = cards.getSets()
   sets[0].checked = true
@@ -111,6 +109,7 @@ const showCards = async () => {
   }
 }
 
+// prompt to show individual card
 const showCard = async (index) => {
   clear()
   let c = cards.getCard(index)
@@ -126,7 +125,10 @@ const showCard = async (index) => {
   return false
 }
 
+// initialize program
 program
   .version(pkg.version)
   .parse(process.argv)
+
+// begin with main menu
 mainMenu()
