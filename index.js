@@ -64,8 +64,8 @@ const mainMenu = async () => {
 
 const newCard = async () => {
   clear()
-  const newCardResponse = await inquirer.newCard()
-  cards.addCard(newCardResponse.cardFront, newCardResponse.cardBack)
+  const newCardResponse = await inquirer.newCard(cards.getSets())
+  cards.addCard(newCardResponse.cardFront, newCardResponse.cardBack, newCardResponse.set)
   l(info('Card successfully added'))
   utils.br(2)
   await utils.pause()
@@ -96,7 +96,10 @@ const showOptions = async () => {
 }
 
 const showCards = async () => {
-  var today = cards.generateSessionCards()
+  let sets = cards.getSets()
+  sets[0].checked = true
+  let sessionSets = await inquirer.sessionSets(sets)
+  let today = cards.generateSessionCards(sessionSets.sessionSets)
   today = utils.shuffle(today)
   let i = today.length
   if (i) {
