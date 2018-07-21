@@ -12,21 +12,19 @@ const utils       = require('./lib/utils')
 const settings    = require('./lib/settings')
 const inquirer    = require('./lib/inquirer')
 
-const l           = console.log
-
 // pass access to settings to our cards and questions
 cards.init(settings)
 inquirer.init(settings)
 
 // Visual Styling
-var error = settings.getColorProfile('error')
-var info  = settings.getColorProfile('info')
-var title = settings.getColorProfile('title')
-var front = settings.getColorProfile('front')
-var back  = settings.getColorProfile('back')
+var error = settings.getMessageFunc('error')
+var info  = settings.getMessageFunc('info')
+var title = settings.getMessageFunc('title')
+var front = settings.getMessageFunc('front')
+var back  = settings.getMessageFunc('back')
 
 function showTitle () {
-  l(title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' })))
+  title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' }))
   utils.br()
 }
 
@@ -52,7 +50,7 @@ const mainMenu = async () => {
       break
     case 'change settings':
       await showOptions()
-      break;
+      break
     default:
       mainMenu()
       break
@@ -66,7 +64,7 @@ const newCard = async () => {
   clear()
   const newCardResponse = await inquirer.newCard(cards.getSets())
   cards.addCard(newCardResponse.cardFront, newCardResponse.cardBack, newCardResponse.set)
-  l(info('Card successfully added'))
+  info('Card successfully added')
   utils.br(2)
   await utils.pause()
   return
@@ -89,7 +87,7 @@ const showOptions = async () => {
   clear()
   showTitle()
   await inquirer.optionsMenu()
-  l(info('Saving settings...'))
+  info('Saving settings...')
   utils.br()
   await utils.pause(1)
   return
@@ -107,7 +105,7 @@ const showCards = async () => {
       if (await showCard(today[i])) return
     }
   } else {
-    l(info('All cards reviewed for today'))
+    info('All cards reviewed for today')
     await utils.pause(1)
     return
   }
@@ -116,20 +114,14 @@ const showCards = async () => {
 const showCard = async (index) => {
   clear()
   let c = cards.getCard(index)
-  l(front(c.front))
+  front(c.front)
   await utils.pause(settings.get('revealDelay'))
-  l(back(c.back))
+  back(c.back)
   const solveCardResponse = await inquirer.solveCard()
-  switch (solveCardResponse.cardSuccess) {
-    case 'yes':
-      cards.updateCard(index, true)
-      break
-    case 'no':
-      cards.updateCard(index, false)
-      break
-    case 'quit':
-      return true // will quit card cycle
-      break
+  if (solveCardResponse === 'quit') {
+    return true
+  } else {
+    cards.reviewCard(index, solveCardResponse)
   }
   return false
 }
