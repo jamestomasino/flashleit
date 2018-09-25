@@ -1,25 +1,23 @@
 #!/usr/bin/env node
 
-const pkg         = require('./package.json')
-const chalk       = require('chalk')
-const clear       = require('clear')
-const figlet      = require('figlet')
-const program     = require('commander')
-const cards       = require('./lib/card')
-const utils       = require('./lib/utils')
-const settings    = require('./lib/settings')
-const inquirer    = require('./lib/inquirer')
+const pkg = require('./package.json')
+const clear = require('clear')
+const figlet = require('figlet')
+const program = require('commander')
+const cards = require('./lib/card')
+const utils = require('./lib/utils')
+const settings = require('./lib/settings')
+const inquirer = require('./lib/inquirer')
 
 // pass access to settings to our cards and questions
 cards.init(settings)
 inquirer.init(settings)
 
 // map functions for visual styling of output types
-var error = settings.getMessageFunc('error')
-var info  = settings.getMessageFunc('info')
-var title = settings.getMessageFunc('title')
-var front = settings.getMessageFunc('front')
-var back  = settings.getMessageFunc('back')
+const info = settings.getMessageFunc('info')
+const title = settings.getMessageFunc('title')
+const front = settings.getMessageFunc('front')
+const back = settings.getMessageFunc('back')
 
 function showTitle () {
   title(figlet.textSync(' flashleit ', { horizontalLayout: 'full' }))
@@ -62,7 +60,6 @@ const newCard = async () => {
   info('Card successfully added')
   utils.br(2)
   await utils.pause()
-  return
 }
 
 // prompt for confirmation
@@ -71,10 +68,8 @@ const confirm = async () => {
   switch (confirmResponse.confirm) {
     case 'yes':
       return true
-      break
     case 'no':
       return false
-      break
   }
   return true
 }
@@ -87,7 +82,6 @@ const showOptions = async () => {
   info('Saving settings...')
   utils.br()
   await utils.pause(1)
-  return
 }
 
 // prompt to show todays cards by set
@@ -105,7 +99,6 @@ const showCards = async () => {
   } else {
     info('All cards reviewed for today')
     await utils.pause(1)
-    return
   }
 }
 
